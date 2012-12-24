@@ -30,7 +30,7 @@ Defining a table mapping:
 Loading an object:
 
 	conn = psycopg2.connect('dbname=employees')
-	person = Person(conn, 1)
+	person = Person(conn, id = 1)
 	print "{o[firstname]} {o[surname]} is {o[age]} years old".format(
 		o = person
 	)
@@ -48,7 +48,7 @@ Creating an object:
 
 Updating an object:
 
-	person = Person(conn, 7)
+	person = Person(conn, id = 7)
 	person.update({
 		'age': 28
 	})
@@ -56,7 +56,7 @@ Updating an object:
 
 or
 	
-	person = Person(conn, 7)
+	person = Person(conn, id = 7)
 	person['age'] = 28
 	person.store()
 
