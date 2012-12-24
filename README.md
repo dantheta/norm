@@ -67,3 +67,19 @@ Querying the table:
 		print "{o[firstname]} {o[surname]} is {o[age]} years old".format(
 			o = person
 		)
+
+To find people over 20:
+
+	for person in People.select(conn, age = ('>', 20)):
+		print "{o[firstname]} {o[surname]} is {o[age]} years old".format(
+			o = person
+		)
+
+Sorting (surname descending):
+
+	for person in People.select(conn, age = ('>', 20), _orderby = '-surname'):
+		print "{o[firstname]} {o[surname]} is {o[age]} years old".format(
+			o = person
+		)
+
+
