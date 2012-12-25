@@ -8,7 +8,7 @@ DBAPI.  It aims to make it extremely easy to do the simple stuff with
 an RDBMS, while still allowing you to drop down to SQL for the complex
 stuff.
 
-Record objects behave as dictionaries, but can be persist to the 
+Record objects behave as dictionaries, which can be persisted to the 
 database by calling the store method.
 
 On construction, the record object is given a standard python database
