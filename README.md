@@ -83,3 +83,13 @@ Sorting (surname descending):
 		)
 
 
+Supported databases
+-------------------
+
+* PostgreSQL
+* MySQL coming soon
+
+License
+-------
+
+NORM is licensed under a BSD style open source license.
