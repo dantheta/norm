@@ -73,6 +73,15 @@ class NormTest(unittest.TestCase):
 				('select * from people where id = %s', [1])
 			)
 
+	def testLimit(self):
+		people = Person.select_all(self.conn, _limit = 10)
+
+		self.assertIn(' LIMIT 10', self.conn.statements[-1][0])
+
+		person = Person.select_all(self.conn, _limit = (10, 10))
+
+		self.assertIn(' LIMIT 10 OFFSET 10', self.conn.statements[-1][0])
+
 	def testSelect(self):
 		people = Person.select_all(self.conn)
 

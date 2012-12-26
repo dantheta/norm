@@ -97,7 +97,7 @@ class DBObject(object):
 
 
     @classmethod
-    def do_select(klass, conn, id = None, _orderby = None, **kw):
+    def do_select(klass, conn, id = None, _orderby = None, _limit = None, **kw):
         """Heavy lifting for select methods"""
         sql = "select * from %s" %(klass.TABLE)
         args = []
@@ -118,6 +118,12 @@ class DBObject(object):
                 if orderterm.lstrip('-') not in (klass.FIELDS + klass.SYSTEM_FIELDS):
                     raise InvalidFieldError("Invalid sort order", orderterm)
             sql += ' ORDER BY ' + ','.join([ ("%s DESC" % (x[1:]) if x[0] == '-' else x) for x in _orderby])
+        if _limit:
+            if isinstance(_limit, tuple):
+                sql += " LIMIT %d" %(int(_limit[0]))
+                sql += " OFFSET %d" %(int(_limit[1]))
+            else:
+                sql += " LIMIT %d" %(int(_limit))
         c = conn.cursor(cursor_factory = DictCursor)
         c.execute(sql, args)
         return c

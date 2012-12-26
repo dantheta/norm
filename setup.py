@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
 	name = 'NORM',
-	version = '0.8.0',
+	version = '0.8.1',
 	author = 'Daniel Ramsay',
 	author_email = 'daniel@dretzq.org.uk',
 
