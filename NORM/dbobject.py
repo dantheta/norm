@@ -16,6 +16,7 @@ class DBObject(object):
     FIELDS = []
     RETURN_NEW_ID = True
     SYSTEM_FIELDS = ['id','created','last_updated']
+	UPDATABLE = True
     
     
     def __init__(self, conn, id = None, data = None):
@@ -53,6 +54,8 @@ class DBObject(object):
 
     def store(self):
         """Insert to / Update target table with data in this instance."""
+		if not self.UPDATABLE:
+			raise NotUpdatableError
         if self['id'] != None:
             self._update(**self.data)
         else:
