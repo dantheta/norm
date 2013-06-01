@@ -138,13 +138,17 @@ class NormTest(unittest.TestCase):
 
 class UtilsTest(unittest.TestCase):
 	def testEncodeWhere(self):
-		wherestr = NORM.utils.encode_where({'age': 20})
+		wherestr, args = NORM.utils.encode_where({'age': 20})
 
 		self.assertEquals(wherestr, 'age = %(age)s')
+		self.assertIn('age', args)
+		self.assertEquals(args['age'], 20)
 
 	def testEncodeWhereCmp(self):
-		wherestr = NORM.utils.encode_where({'age' : ('>', 20)})
+		wherestr, args = NORM.utils.encode_where({'age' : ('>', 20)})
 		self.assertEquals(wherestr, 'age > %(age)s')
+		self.assertIn( 'age',args)
+		self.assertEquals(args['age'], 20)
 
 
 

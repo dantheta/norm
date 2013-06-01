@@ -109,8 +109,8 @@ class DBObject(object):
         if kw:
             if id != None:
                 kw['id'] = id
-            sql +=  utils.encode_where(kw)
-            args = kw
+            where_sql, args = utils.encode_where(kw)
+            sql += where_sql
         elif id != None:
             sql += " id = %s"
             args = [id]
@@ -151,10 +151,12 @@ class DBObject(object):
     def count(klass, conn, **kw):
         sql = "select count(*) from " + klass.TABLE 
         if kw:
-            where = utils.encode_where(kw)
+            where, values = utils.encode_where(kw)
             sql +=  " WHERE " + where
+        else:
+            values = kw
         with closing(conn.cursor()) as c:
-            c.execute(sql, kw)
+            c.execute(sql, values)
             row = c.fetchone()
             return row[0]
             
