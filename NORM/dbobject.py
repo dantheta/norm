@@ -19,13 +19,13 @@ class DBObject(object):
     UPDATABLE = True
     
     
-    def __init__(self, conn, id = None, data = None):
+    def __init__(self, conn, id = None, data = None, update=False, nowait=False):
         """Arguments: db connection.  Optional: id or data to load/preload a specific record."""
         
         self.conn = conn
         self.clear()
         if id != None:
-            self.load(id)
+            self.load(id, update, nowait)
         elif data != None:
             self.load_dict(data)
 
@@ -34,10 +34,15 @@ class DBObject(object):
         """defined only for convenience - self['id'] is the authoritative var for this"""
         return self['id']
 
-    def load(self, objid):
+    def load(self, objid, update=False, nowait=False):
         """Load a record from the target table identified by ID."""
+
+
         with closing(self.conn.cursor(cursor_factory = DictCursor)) as c:
-            c.execute("select * from %s where id = %%s"%(self.TABLE), [objid])
+            c.execute("select * from %s where id = %%s %s %s "
+                %(self.TABLE, 'FOR UPDATE' if update else '', 'NOWAIT' if nowait  else ''), 
+                [objid]
+                )
             row = c.fetchone()
             if row == None:
                 raise ObjectNotFound(objid, self.TABLE)
