@@ -5,6 +5,7 @@ import sys
 import utils
 from contextlib import closing
 
+import psycopg2
 from psycopg2.extras import DictCursor
 
 from exceptions import *
@@ -187,7 +188,10 @@ class DBObject(object):
         values['id'] = id
 
         with closing(self.conn.cursor(cursor_factory = DictCursor)) as c:
-            c.execute(sql, values)
+            try:
+               c.execute(sql, values)
+            except psycopg2.IntegrityError:
+                raise ObjectExists(self.TABLE)
 
     def _insert(self, **kw):
         """Insert to target table, returning ID for new record."""
@@ -210,10 +214,13 @@ class DBObject(object):
         values = kw.copy()
 
         with closing(self.conn.cursor(cursor_factory = DictCursor)) as c:
-            c.execute(sql, values)
-            if self.RETURN_NEW_ID:
-                newid = c.fetchone()['newid']
-                return newid
+            try:
+                c.execute(sql, values)
+                if self.RETURN_NEW_ID:
+                    newid = c.fetchone()['newid']
+                    return newid
+            except psycopg2.IntegrityError:
+                raise ObjectExists(self.TABLE)
 
     def _delete(self, id):
         """Delete row from target table."""
