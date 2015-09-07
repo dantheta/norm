@@ -176,6 +176,20 @@ class DBObject(object):
         """Select rows from target table.  Returns whole resultset as list of dicts"""
         return list( klass.select(conn, id, **kw) )
 
+    @classmethod
+    def find_or_create(klass, conn, keyfields, data):
+        """Select an object identified by keyfields from data, otherwise
+        create the object"""
+        try:
+            key = {x:y for (x,y) in data.iteritems() if x in keyfields}
+            obj = klass.select_one(conn, **key)
+            return obj
+        except ObjectNotFound:
+            obj = klass(conn)
+            obj.update(data)
+            obj.store()
+            return obj
+
     def _update(self, id, **kw):
         """Update target table with data specified as keyword parameters."""
         sql = "update %s set " %(self.TABLE)
