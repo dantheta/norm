@@ -11,3 +11,7 @@ class Query(object):
         for row in self.c:
             yield row
         self.c.close()
+
+    def fetchone(self):
+        return self.c.fetchone()
+
