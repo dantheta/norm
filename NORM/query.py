@@ -15,3 +15,5 @@ class Query(object):
     def fetchone(self):
         return self.c.fetchone()
 
+    def close(self):
+        self.c.close()
